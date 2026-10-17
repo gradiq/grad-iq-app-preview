@@ -1,0 +1,54 @@
+/* Grad-IQ Planners home. Palette matches the Grad-IQ planners (cream, blush, lavender, mint, sky; DM Sans + Fraunces). */
+:root {
+  --cream: #faf6f1; --blush: #f2c4c0; --blush-soft: #f8ddd9; --lavender: #c9b8e0; --lavender-soft: #e8dff3;
+  --mint: #b8d9c8; --mint-soft: #dceee5; --sky: #b7d4e8; --sky-soft: #dceaf4;
+  --ink: #2c2834; --ink-soft: #4f4a5b; --muted: #676173; --plum: #6b5b8a;
+  --sat: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --sab: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+  --sal: var(--safe-area-inset-left, env(safe-area-inset-left, 0px));
+  --sar: var(--safe-area-inset-right, env(safe-area-inset-right, 0px));
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh; font-family: "DM Sans", system-ui, -apple-system, sans-serif; color: var(--ink); line-height: 1.5;
+  background: radial-gradient(ellipse 80% 50% at 10% -10%, var(--lavender-soft), transparent 50%),
+    radial-gradient(ellipse 70% 40% at 90% 0%, var(--blush-soft), transparent 45%),
+    radial-gradient(ellipse 60% 50% at 50% 100%, var(--mint-soft), transparent 50%), var(--cream);
+  background-attachment: fixed;
+  padding: calc(var(--sat) + 1.25rem) calc(var(--sar) + 1.1rem) calc(var(--sab) + 1.25rem) calc(var(--sal) + 1.1rem);
+  -webkit-tap-highlight-color: transparent;
+}
+.home-head, .tiles, .home-foot { max-width: 640px; margin: 0 auto; }
+.brand-row { display: flex; align-items: center; gap: .85rem; margin-bottom: .6rem; }
+.logo { width: 48px; height: 48px; border-radius: 15px; box-shadow: 0 4px 16px rgba(107,91,138,.18); }
+.eyebrow { font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.9rem; letter-spacing: -.02em; line-height: 1.15; margin: 0; }
+.lede { color: var(--ink-soft); margin: 0 0 1.1rem; }
+.mode-note { background: #fff8e6; border: 1px solid #f0d9a0; color: #6b4a00; border-radius: 12px; padding: .6rem .8rem; font-size: .88rem; }
+.tiles { display: grid; gap: .8rem; }
+.tile {
+  display: flex; align-items: center; gap: .9rem; padding: 1rem 1rem; border-radius: 18px; text-decoration: none; color: var(--ink);
+  background: rgba(255,255,255,.82); border: 1px solid rgba(44,40,52,.06); box-shadow: 0 4px 24px rgba(44,40,52,.06);
+  min-height: 88px; transition: transform .12s ease;
+}
+.tile:active { transform: scale(.985); }
+.tile:focus-visible { outline: 3px solid #8a6fa8; outline-offset: 2px; }
+.tile-icon { width: 52px; height: 52px; flex: none; border-radius: 15px; display: grid; place-items: center; font-size: 1.6rem; }
+.mint .tile-icon { background: var(--mint-soft); } .lavender .tile-icon { background: var(--lavender-soft); }
+.sky .tile-icon { background: var(--sky-soft); } .blush .tile-icon { background: var(--blush-soft); }
+.tile-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.tile-text strong { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.08rem; line-height: 1.2; }
+.tile-sub { font-size: .86rem; color: var(--ink-soft); margin-top: .15rem; }
+.tile-status { font-size: .74rem; color: var(--plum); font-weight: 600; margin-top: .3rem; }
+.chev { font-size: 1.8rem; color: var(--muted); line-height: 1; }
+.home-foot { margin-top: 1.5rem; color: var(--muted); font-size: .85rem; text-align: center; }
+.disclaimer { font-weight: 600; color: var(--ink-soft); margin: 0 0 .3rem; }
+.small { margin: 0; font-size: .78rem; }
+.home-foot a { color: var(--plum); font-weight: 600; }
+.doc-main { max-width: 640px; margin: 0 auto; }
+.doc-main h1 { margin-bottom: .4rem; }
+.doc-main h2 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.15rem; margin: 1.4rem 0 .4rem; }
+.doc-main ul { padding-left: 1.2rem; } .doc-main li { margin-bottom: .45rem; }
+.back { display: inline-flex; min-height: 40px; align-items: center; padding: 0 .9rem; border-radius: 999px; background: #fff; border: 1px solid rgba(44,40,52,.1); color: var(--plum); font-weight: 600; text-decoration: none; }
+.todo { background: #fff8e6; padding: 0 .3rem; border-radius: 4px; }

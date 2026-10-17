@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Lumen — 7-Step Time Planner</title>
+  <link rel="icon" href="../../shell/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../shell/fonts.css" />
+  <link rel="stylesheet" href="styles.css" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' blob: data:">
+<link rel="stylesheet" href="../../shell/appbar.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Welcome -->
+    <section id="welcome" class="screen" aria-label="Welcome">
+      <div class="flow-card">
+        <p class="eyebrow">Lumen · Guided mode</p>
+        <h1>From chaos to<br />a calm week.</h1>
+        <p class="lede">
+          Seven gentle steps. One focus at a time. You’ll leave with a simple weekly plan—
+          not a perfect schedule.
+        </p>
+        <div class="level-grid" id="level-picker" role="group" aria-label="Study level">
+          <button type="button" class="level-card" data-level="hs">
+            <span class="level-icon" aria-hidden="true">📚</span>
+            <strong>High School</strong>
+            <span>Classes, homework, sleep first</span>
+          </button>
+          <button type="button" class="level-card selected" data-level="college">
+            <span class="level-icon" aria-hidden="true">🎓</span>
+            <strong>College</strong>
+            <span>Syllabus, deep work, self-pacing</span>
+          </button>
+          <button type="button" class="level-card" data-level="grad">
+            <span class="level-icon" aria-hidden="true">🔬</span>
+            <strong>Grad / Research</strong>
+            <span>Writing blocks, meetings, milestones</span>
+          </button>
+        </div>
+        <div class="welcome-actions">
+          <button type="button" class="btn primary lg" id="btn-begin">Start the 7 steps</button>
+</div>
+      </div>
+    <p class="gq-lumen-note">For planning only. Not medical, mental-health or academic advice. Demo: nothing you enter is saved.</p>
+    </section>
+
+    <!-- Guided flow -->
+    <section id="flow" class="screen hidden" aria-label="7-step planner">
+      <header class="flow-top">
+        <div class="brand">
+          <span class="logo-mark" aria-hidden="true"></span>
+          <div>
+            <strong>7-Step Planner</strong>
+            <span class="brand-sub" id="level-badge">College</span>
+          </div>
+        </div>
+        <div class="progress-wrap" aria-label="Progress">
+          <div class="progress-meta">
+            <span id="step-label">Step 1 of 7</span>
+            <span id="step-title-short">Priorities</span>
+          </div>
+          <div class="progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="7" aria-valuenow="1" id="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <div class="step-dots" id="step-dots" role="tablist" aria-label="Steps"></div>
+        </div>
+      </header>
+
+      <main class="flow-main">
+        <div class="flow-card step-card" id="step-panel">
+          <!-- Filled by JS -->
+        </div>
+      </main>
+
+      <footer class="flow-nav">
+        <button type="button" class="btn ghost lg" id="btn-back">Back</button>
+        <button type="button" class="btn primary lg" id="btn-next">Next</button>
+      </footer>
+    </section>
+
+    <!-- Summary plan -->
+    <section id="summary" class="screen hidden" aria-label="Your weekly plan">
+      <header class="flow-top">
+        <div class="brand">
+          <span class="logo-mark" aria-hidden="true"></span>
+          <div>
+            <strong>Your week</strong>
+            <span class="brand-sub">Ready to use</span>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button type="button" class="btn ghost" id="btn-edit-steps">Edit steps</button>
+          <button type="button" class="btn secondary" id="btn-restart">Start over</button>
+        </div>
+      </header>
+      <main class="summary-main" id="summary-content"></main>
+    </section>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+  <script src="../../shell/mode.js"></script>
+<script src="../../shell/bridge.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
