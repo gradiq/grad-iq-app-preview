@@ -9,16 +9,31 @@
   ];
   var M = window.GRADIQ_MODE || {};
   function has(k) { try { return !!localStorage.getItem(k); } catch (e) { return false; } }
+  var S = window.GQStore;
+  function unlocked() { return !M.preview && !!(S && S.isUnlocked()); }
   function render() {
+    var full = unlocked();
     document.getElementById("tiles").innerHTML = P.map(function (p) {
-      var st = M.preview ? "Demo · sample data" : (has(p.key) ? "Saved on this device" : "Start fresh");
-      return '<a class="tile ' + p.color + '" href="planners/' + p.id + '/index.html" data-planner="' + p.id + '">' +
+      var st = M.preview ? "Demo · sample data" : !full ? "Free demo · sample data, not saved" : (has(p.key) ? "Saved on this device" : "Start fresh");
+      var dir = M.preview || full ? "planners/" : "demo/";
+      return '<a class="tile ' + p.color + '" href="' + dir + p.id + '/index.html" data-planner="' + p.id + '" data-edition="' + (M.preview ? "demo" : full ? "full" : "demo") + '">' +
         '<span class="tile-icon" aria-hidden="true">' + p.icon + '</span>' +
         '<span class="tile-text"><strong>' + p.title + '</strong><span class="tile-sub">' + p.sub + '</span>' +
         '<span class="tile-status">' + st + '</span></span><span class="chev" aria-hidden="true">›</span></a>';
     }).join("");
+    var cta = document.getElementById("unlock-cta");
+    if (cta) cta.hidden = M.preview || full;
+    var lede = document.getElementById("lede");
+    if (lede && !M.preview) lede.textContent = full ? "Four planners for grad school, in one place. Everything you type stays on this device."
+      : "Four planners for grad school. Try each one free with sample data, then unlock them all to save your own plans.";
   }
   render();
+  if (S && !M.preview) {
+    S.ready.then(render);
+    document.addEventListener("gradiq:entitlement", render);
+    // Launch check with the App Store / Google Play: picks up purchases made elsewhere, pending purchases that completed, refunds.
+    S.ready.then(function () { return S.check(); }).then(render);
+  }
   if (M.preview) { var n = document.getElementById("mode-note"); n.hidden = false; n.textContent = "Web preview of the app. Planners run in demo mode with sample data, and nothing is saved."; }
   document.getElementById("ver").textContent = M.version ? "v" + M.version : "";
   // Re-render after native storage restore (bridge fires this) so "Saved" badges are right.

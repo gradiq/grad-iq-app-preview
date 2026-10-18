@@ -117,7 +117,7 @@
 
   function load() {
     try {
-      const raw = null; /* preview: demo, nothing saved */
+      const raw = null; /* demo: nothing saved */
       if (!raw) return null;
       return Object.assign(defaultState(), JSON.parse(raw));
     } catch (_) {
@@ -127,7 +127,7 @@
 
   function save() {
     try {
-      /* preview: demo, nothing saved */
+      /* demo: nothing saved */
     } catch (_) {}
   }
 

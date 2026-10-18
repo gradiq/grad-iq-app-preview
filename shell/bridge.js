@@ -4,7 +4,8 @@
       UserDefaults), and restored into localStorage at launch if the WebView's storage was cleared.
    2. Android hardware back: planner -> home, home -> exit.
    3. Back-to-home app bar on planner pages (safe-area aware).
-   4. External links (sources) open in the system browser; downloads (backup JSON / CSV) are shared via the native share sheet. */
+   4. External links (sources) open in the system browser; downloads (backup JSON / CSV) are shared via the native share sheet.
+   5. Free vs unlocked: full planners (/planners/) open only with the unlock; otherwise the demo edition (/demo/). */
 (function () {
   "use strict";
   var M = window.GRADIQ_MODE || {};
@@ -13,7 +14,7 @@
   function plug(n) { return native && C.Plugins ? C.Plugins[n] : null; }
   var Prefs = plug("Preferences"), App = plug("App"), FS = plug("Filesystem"), Share = plug("Share");
   var PFX = "ls:";
-  var inPlanner = /\/planners\//.test(location.pathname);
+  var inPlanner = /\/(planners|demo)\//.test(location.pathname), inFull = !M.preview && /\/planners\//.test(location.pathname), inDemo = !M.preview && /\/demo\//.test(location.pathname);
   var homeHref = inPlanner ? "../../index.html" : "index.html";
   function isHome() { return !!(document.body && document.body.classList.contains("home")); }
   if (native) document.documentElement.classList.add("in-app");
@@ -22,9 +23,10 @@
   /* 1. storage mirror */
   if (Prefs) {
     var ls = window.localStorage, sp = Storage.prototype, oSet = sp.setItem, oRem = sp.removeItem, oClr = sp.clear;
-    sp.setItem = function (k, v) { oSet.call(this, k, v); if (this === ls) Prefs.set({ key: PFX + k, value: String(v) }).catch(function () {}); };
-    sp.removeItem = function (k) { oRem.call(this, k); if (this === ls) Prefs.remove({ key: PFX + k }).catch(function () {}); };
-    sp.clear = function () { oClr.call(this); if (this === ls) Prefs.keys().then(function (r) { r.keys.forEach(function (k) { if (k.indexOf(PFX) === 0) Prefs.remove({ key: k }); }); }).catch(function () {}); };
+    var ev = function (n, k) { document.dispatchEvent(new CustomEvent(n, { detail: { key: k } })); };
+    sp.setItem = function (k, v) { oSet.call(this, k, v); if (this === ls) { Prefs.set({ key: PFX + k, value: String(v) }).catch(function () {}); ev("gradiq:saved", k); } };
+    sp.removeItem = function (k) { oRem.call(this, k); if (this === ls) { Prefs.remove({ key: PFX + k }).catch(function () {}); ev("gradiq:removed", k); } };
+    sp.clear = function () { oClr.call(this); if (this === ls) { Prefs.keys().then(function (r) { r.keys.forEach(function (k) { if (k.indexOf(PFX) === 0) Prefs.remove({ key: k }); }); }).catch(function () {}); ev("gradiq:removed", null); } };
     // Restore: native copy wins only when the WebView copy is missing (e.g. OS reclaimed WebView storage).
     Prefs.keys().then(function (r) {
       var miss = r.keys.filter(function (k) { return k.indexOf(PFX) === 0 && ls.getItem(k.slice(PFX.length)) === null; });
@@ -33,7 +35,9 @@
           // Back-fill: data saved before the mirror existed gets copied to native storage.
           for (var i = 0; i < ls.length; i++) { var k = ls.key(i); if (r.keys.indexOf(PFX + k) < 0) Prefs.set({ key: PFX + k, value: ls.getItem(k) }); }
           document.dispatchEvent(new CustomEvent("gradiq:restored", { detail: { restored: miss.length } }));
-          if (miss.length && inPlanner) location.reload(); // planner already read empty storage; reload with restored data
+          // planner already read empty storage: reload with restored planner data (app-internal keys don't need it)
+          var data = miss.filter(function (k) { return !/^ls:gradiq-(unlock|sim-store)-v1$/.test(k); });
+          if (data.length && inPlanner && !window.__gqLeaving) location.reload();
         });
     }).catch(function () {});
   }
@@ -51,11 +55,19 @@
       var title = (document.title || "Grad-IQ Planners").split(/ · | — /)[0];
       if (/^Lumen$/.test(title)) title = "Lumen 7-Step Planner";
       b.innerHTML = '<a href="' + homeHref + '" class="gq-home" id="gq-home"><span aria-hidden="true">‹</span> Home</a>' +
-        '<span class="gq-title"></span>' + (M.preview ? '<span class="gq-demo">Demo</span>' : '<span class="gq-spacer"></span>');
+        '<span class="gq-title"></span>' + (M.preview ? '<span class="gq-demo">Demo</span>' : inDemo ? '<a class="gq-unlock" id="gq-unlock" href="../../unlock.html">Unlock</a>' : '<span class="gq-spacer"></span>');
       b.querySelector(".gq-title").textContent = title;
       document.body.insertBefore(b, document.body.firstChild);
     };
     if (document.body) bar(); else document.addEventListener("DOMContentLoaded", bar);
+  }
+
+  /* 5. full planners need the unlock; without it, go to the demo edition of the same planner */
+  if (inFull && window.GQStore) {
+    var toDemo = function () { window.__gqLeaving = true; location.replace(location.pathname.replace("/planners/", "/demo/") + location.hash); };
+    if (!window.GQStore.cached()) toDemo();
+    else window.GQStore.ready.then(function () { if (!window.GQStore.isUnlocked()) toDemo(); });
+    document.addEventListener("gradiq:entitlement", function (e) { if (!e.detail.unlocked) toDemo(); });
   }
 
   /* 4. links + downloads */

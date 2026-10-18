@@ -33,3 +33,9 @@ body { padding-top: var(--gq-bar) !important; padding-left: var(--gq-sal); paddi
 .flow-nav { padding-bottom: calc(1rem + var(--gq-sab)) !important; padding-left: calc(1.25rem + var(--gq-sal)) !important; padding-right: calc(1.25rem + var(--gq-sar)) !important; }
 /* In the app the planner's own brand bar repeats the app bar, so hide it (the web preview keeps it for the demo price/buy note). */
 .gq-app .topbar { display: none !important; }
+#gq-appbar .gq-unlock { min-height: 36px; display: inline-flex; align-items: center; padding: 0 .85rem; border-radius: 999px; background: #6b5b8a; color: #fff; font-weight: 700; font-size: .85rem; text-decoration: none; white-space: nowrap; }
+/* Loan reminders card (full Stipend & Loan planner, app only) */
+.gq-rem { margin-bottom: 1rem; } .gq-rem .check { margin: .35rem 0; }
+.gq-rem-leads { border: 0; padding: 0; margin: .5rem 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 .8rem; } .gq-rem-leads legend { padding: 0; margin-bottom: .2rem; color: #4f4a5b; }
+.gq-rem-status { margin-top: .6rem; font-weight: 600; color: #4f4a5b; }
+.gq-due-row { margin-top: .3rem; }
