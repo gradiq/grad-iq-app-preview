@@ -61,7 +61,7 @@
     });
   }
   // Test-only fallback price for the simulated store in debug builds. Real builds show the store's localized price.
-  function SIM_PRICE() { return "$19.00"; }
+  function SIM_PRICE() { return "$19.99"; }  // debug test store only; release always shows the store's priceString
 
   /* Ask the store what this Apple ID / Google account owns right now. */
   function check() {
